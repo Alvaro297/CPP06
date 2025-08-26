@@ -19,9 +19,8 @@ int main()
 	std::cout << "\tInt: " << ptr->dataInt << std::endl;
 
 	if (ptr == &myData)
-		std::cout << "✅ Deserialización correcta, apuntan al mismo objeto." << std::endl;
+		std::cout << "Deserialización correcta" << std::endl;
 	else
-		std::cout << "❌ Error, no apuntan al mismo objeto." << std::endl;
-
+		std::cout << "Error no apuntan al mismo objeto" << std::endl;
 	return 0;
 }
