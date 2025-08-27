@@ -1,3 +1,7 @@
+#include "ScalarConvert.hpp"
+#include <iostream>
+#include <cstdlib>
+
 void charType(const std::string& literal)
 {
 	char typeChar;
@@ -10,7 +14,12 @@ void charType(const std::string& literal)
 	typeFloat = static_cast<float>(typeChar);
 	typeDouble = static_cast<double>(typeChar);
 
-	std::cout << "char: '" << typeChar << "'" << std::endl;
+	if(typeInt < 0 || typeInt > 127)
+		std::cout << "char: impossible" << std::endl;
+	else if (!isprint(typeInt))
+		std::cout << "Is non printeable" << std::endl;
+	else
+		std::cout << "char: '" << typeChar << "'" << std::endl;
 	std::cout << "int: " << typeInt << std::endl;
 	std::cout << "float: " << typeFloat << "f" << std::endl;
 	std::cout << "double: " << typeDouble << std::endl;
@@ -23,12 +32,17 @@ void intType(const std::string& literal)
 	float typeFloat;
 	double typeDouble;
 
-	typeInt = std::stoi(literal);
+	typeInt = std::atoi(literal.c_str());
 	typeChar = static_cast<char>(typeInt);
 	typeFloat = static_cast<float>(typeInt);
 	typeDouble = static_cast<double>(typeInt);
 
-	std::cout << "char: '" << typeChar << "'" << std::endl;
+	if(typeInt < 0 || typeInt > 127)
+		std::cout << "char: impossible" << std::endl;
+	else if (!isprint(typeInt))
+		std::cout << "Is non printeable" << std::endl;
+	else
+		std::cout << "char: '" << typeChar << "'" << std::endl;
 	std::cout << "int: " << typeInt << std::endl;
 	std::cout << "float: " << typeFloat << "f" << std::endl;
 	std::cout << "double: " << typeDouble << std::endl;
@@ -41,12 +55,17 @@ void floatType(const std::string& literal)
 	int typeInt;
 	double typeDouble;
 
-	typeFloat = std::stof(literal);
+	typeFloat = static_cast<float>(std::atof(literal.c_str()));
 	typeChar = static_cast<char>(typeFloat);
 	typeInt = static_cast<int>(typeFloat);
 	typeDouble = static_cast<double>(typeFloat);
 
-	std::cout << "char: '" << typeChar << "'" << std::endl;
+	if(typeInt < 0 || typeInt > 127)
+		std::cout << "char: impossible" << std::endl;
+	else if (!isprint(typeInt))
+		std::cout << "Is non printeable" << std::endl;
+	else
+		std::cout << "char: '" << typeChar << "'" << std::endl;
 	std::cout << "int: " << typeInt << std::endl;
 	std::cout << "float: " << typeFloat << "f" << std::endl;
 	std::cout << "double: " << typeDouble << std::endl;
@@ -59,7 +78,7 @@ void doubleType(const std::string& literal)
 	int typeInt;
 	float typeFloat;
 
-	typeDouble = std::stod(literal);
+	typeDouble = std::atof(literal.c_str());
 	typeChar = static_cast<char>(typeDouble);
 	typeInt = static_cast<int>(typeDouble);
 	typeFloat = static_cast<float>(typeDouble);
@@ -70,12 +89,10 @@ void doubleType(const std::string& literal)
 	std::cout << "double: " << typeDouble << std::endl;
 }
 
-void invalidType(const std::string& literal)
+void invalidType()
 {
 	std::cerr << "Error: invalid literal type" << std::endl;
 }
-#include <iostream>
-#include "ScalarConvert.hpp"
 
 int checkSpecialCases(const std::string& literal)
 {
@@ -110,8 +127,10 @@ int knowData(const std::string& literal)
 	{
 		if (isdigit(literal[i]) || literal[i] == '.'
 			|| (i == 0 && (literal[i] == '-' || literal[i] == '+')))
+		{
 			if (literal[i] == '.')
 				flagBullet = true;
+		}
 		else
 			return INVALID;
 		i--;
@@ -145,7 +164,7 @@ void ScalarConvert::convert(const std::string& literal)
 			doubleType(literal);
 			break;
 		case INVALID:
-			invalidType(literal);
+			invalidType();
 			break;
 		default:
 			break;
