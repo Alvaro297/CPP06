@@ -1,6 +1,7 @@
 #include "ScalarConvert.hpp"
 #include <iostream>
 #include <cstdlib>
+#include <sstream>
 
 void charType(const std::string& literal)
 {
@@ -31,8 +32,9 @@ void intType(const std::string& literal)
 	char typeChar;
 	float typeFloat;
 	double typeDouble;
+	std::stringstream ss(literal);
 
-	typeInt = std::atoi(literal.c_str());
+	ss >> typeInt;
 	typeChar = static_cast<char>(typeInt);
 	typeFloat = static_cast<float>(typeInt);
 	typeDouble = static_cast<double>(typeInt);
@@ -54,8 +56,9 @@ void floatType(const std::string& literal)
 	char typeChar;
 	int typeInt;
 	double typeDouble;
+	std::stringstream ss(literal);
 
-	typeFloat = static_cast<float>(std::atof(literal.c_str()));
+	ss >> typeFloat;
 	typeChar = static_cast<char>(typeFloat);
 	typeInt = static_cast<int>(typeFloat);
 	typeDouble = static_cast<double>(typeFloat);
@@ -77,13 +80,19 @@ void doubleType(const std::string& literal)
 	char typeChar;
 	int typeInt;
 	float typeFloat;
+	std::stringstream ss(literal);
 
-	typeDouble = std::atof(literal.c_str());
+	ss >> typeDouble;
 	typeChar = static_cast<char>(typeDouble);
 	typeInt = static_cast<int>(typeDouble);
 	typeFloat = static_cast<float>(typeDouble);
 
-	std::cout << "char: '" << typeChar << "'" << std::endl;
+	if(typeInt < 0 || typeInt > 127)
+		std::cout << "char: impossible" << std::endl;
+	else if (!isprint(typeInt))
+		std::cout << "Is non printeable" << std::endl;
+	else
+		std::cout << "char: '" << typeChar << "'" << std::endl;
 	std::cout << "int: " << typeInt << std::endl;
 	std::cout << "float: " << typeFloat << "f" << std::endl;
 	std::cout << "double: " << typeDouble << std::endl;
