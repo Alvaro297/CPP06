@@ -1,7 +1,39 @@
 #include "ScalarConvert.hpp"
 #include <iostream>
 #include <cstdlib>
-#include <sstream>
+#include <cmath>
+
+
+int specialCasesSuport(const std::string& literal)
+{
+	if (literal == "nanf" || literal == "nan")
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: nanf" << std::endl;
+		std::cout << "double: nan" << std::endl;
+		return 1;
+	}
+
+	if (literal == "inff" || literal == "inf" || literal == "+inff" || literal == "+inf")
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: inff" << std::endl;
+		std::cout << "double: inf" << std::endl;
+		return 1;
+	}
+
+	if (literal == "-inff" || literal == "-inf")
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: -inff" << std::endl;
+		std::cout << "double: -inf" << std::endl;
+		return 1;
+	}
+	return 0;
+}
 
 void charType(const std::string& literal)
 {
@@ -22,8 +54,8 @@ void charType(const std::string& literal)
 	else
 		std::cout << "char: '" << typeChar << "'" << std::endl;
 	std::cout << "int: " << typeInt << std::endl;
-	std::cout << "float: " << typeFloat << "f" << std::endl;
-	std::cout << "double: " << typeDouble << std::endl;
+	std::cout << "float: " << typeFloat << ".0f" << std::endl;
+	std::cout << "double: " << typeDouble << ".0" << std::endl;
 }
 
 void intType(const std::string& literal)
@@ -32,9 +64,8 @@ void intType(const std::string& literal)
 	char typeChar;
 	float typeFloat;
 	double typeDouble;
-	std::stringstream ss(literal);
 
-	ss >> typeInt;
+	typeInt = std::atol(literal.c_str());
 	typeChar = static_cast<char>(typeInt);
 	typeFloat = static_cast<float>(typeInt);
 	typeDouble = static_cast<double>(typeInt);
@@ -46,8 +77,8 @@ void intType(const std::string& literal)
 	else
 		std::cout << "char: '" << typeChar << "'" << std::endl;
 	std::cout << "int: " << typeInt << std::endl;
-	std::cout << "float: " << typeFloat << "f" << std::endl;
-	std::cout << "double: " << typeDouble << std::endl;
+	std::cout << "float: " << typeFloat << ".0f" << std::endl;
+	std::cout << "double: " << typeDouble << ".0" << std::endl;
 }
 
 void floatType(const std::string& literal)
@@ -56,12 +87,17 @@ void floatType(const std::string& literal)
 	char typeChar;
 	int typeInt;
 	double typeDouble;
-	std::stringstream ss(literal);
+	double fracType;
+	double partInt;
 
-	ss >> typeFloat;
-	typeChar = static_cast<char>(typeFloat);
+	if (specialCasesSuport(literal))
+		return;
+
+	typeFloat = static_cast<float>(std::atof(literal.c_str()));
 	typeInt = static_cast<int>(typeFloat);
+	typeChar = static_cast<char>(typeInt);
 	typeDouble = static_cast<double>(typeFloat);
+	fracType = std::modf(typeDouble, &partInt);
 
 	if(typeInt < 0 || typeInt > 127)
 		std::cout << "char: impossible" << std::endl;
@@ -70,8 +106,16 @@ void floatType(const std::string& literal)
 	else
 		std::cout << "char: '" << typeChar << "'" << std::endl;
 	std::cout << "int: " << typeInt << std::endl;
-	std::cout << "float: " << typeFloat << "f" << std::endl;
-	std::cout << "double: " << typeDouble << std::endl;
+	if (fracType == 0)
+	{
+		std::cout << "float: " << typeFloat << ".0f" << std::endl;
+		std::cout << "double: " << typeDouble << ".0" << std::endl;
+	}
+	else
+	{
+		std::cout << "float: " << typeFloat << "f" << std::endl;
+		std::cout << "double: " << typeDouble << std::endl;
+	}
 }
 
 void doubleType(const std::string& literal)
@@ -80,12 +124,17 @@ void doubleType(const std::string& literal)
 	char typeChar;
 	int typeInt;
 	float typeFloat;
-	std::stringstream ss(literal);
+	double fracType;
+	double partInt;
 
-	ss >> typeDouble;
-	typeChar = static_cast<char>(typeDouble);
+	if (specialCasesSuport(literal))
+		return;
+
+	typeDouble = std::atof(literal.c_str());
 	typeInt = static_cast<int>(typeDouble);
+	typeChar = static_cast<char>(typeInt);
 	typeFloat = static_cast<float>(typeDouble);
+	fracType = std::modf(typeDouble, &partInt);
 
 	if(typeInt < 0 || typeInt > 127)
 		std::cout << "char: impossible" << std::endl;
@@ -93,9 +142,17 @@ void doubleType(const std::string& literal)
 		std::cout << "Is non printeable" << std::endl;
 	else
 		std::cout << "char: '" << typeChar << "'" << std::endl;
+	if (fracType == 0)
+	{
+		std::cout << "float: " << typeFloat << ".0f" << std::endl;
+		std::cout << "double: " << typeDouble << ".0" << std::endl;
+	}
+	else
+	{
+		std::cout << "float: " << typeFloat << "f" << std::endl;
+		std::cout << "double: " << typeDouble << std::endl;
+	}
 	std::cout << "int: " << typeInt << std::endl;
-	std::cout << "float: " << typeFloat << "f" << std::endl;
-	std::cout << "double: " << typeDouble << std::endl;
 }
 
 void invalidType()
@@ -105,7 +162,7 @@ void invalidType()
 
 int checkSpecialCases(const std::string& literal)
 {
-	if (literal == "nanf" || literal == "+inff" || literal == "-inff")
+	if (literal == "nanf" || literal == "+inff" || literal == "-inff" || literal == "inff" || literal == "inf")
  		return FLOAT;
  	else if (literal == "nan" || literal == "+inf" || literal == "-inf")
  		return DOUBLE;
@@ -128,10 +185,12 @@ int knowData(const std::string& literal)
 	special = checkSpecialCases(literal);
 	if (special != INVALID)
 		return special;
-	if (i == 1 && !isdigit(literal[i]))
+	if (i == 1 && !isdigit(literal[0]))
 		return CHAR;
 	if (literal[--i] == 'f')
 			flagFloat = true;
+	if (literal[i] == 'f')
+		i--;
 	while (i > 0)
 	{
 		if (isdigit(literal[i]) || literal[i] == '.'

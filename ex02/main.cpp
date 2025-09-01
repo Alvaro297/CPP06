@@ -44,7 +44,7 @@ void identify(Base& p)
 		std::cout << "The class is A" << std::endl;
 		return;
 	}
-	catch (const std::bad_cast&)
+	catch (std::exception e)
 	{}
 
 	try
@@ -54,7 +54,7 @@ void identify(Base& p)
 		std::cout << "The class is B" << std::endl;
 		return;
 	}
-	catch (const std::bad_cast&)
+	catch (std::exception e)
 	{}
 
 	try
@@ -64,7 +64,7 @@ void identify(Base& p)
 		std::cout << "The class is C" << std::endl;
 		return;
 	}
-	catch (const std::bad_cast&)
+	catch (std::exception e)
 	{}
 
 	std::cerr << "Something went wrong: unknown reference type" << std::endl;
